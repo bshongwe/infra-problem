@@ -32,12 +32,27 @@ cd infra
 
 See [docs/cloud-deployment.md](docs/cloud-deployment.md) for detailed instructions.
 
-## Documentation
+# Documentation
 
 - **[Solution Overview](docs/README.md)** - Complete overview of the DevOps solution
 - **[Local Development Guide](docs/local-development.md)** - Set up your local environment
 - **[Cloud Deployment Guide](docs/cloud-deployment.md)** - Deploy to the cloud
+- **[Architecture Decision Records (ADRs)](docs/adr/README.md)** - Key technical decisions and rationale
+- **[Security Considerations](SECURITY.md)** - Security notes and best practices
 - **[Original README](README-original.md)** - Original project documentation
+
+## Key Design Decisions
+
+See the [ADRs](docs/adr/README.md) for detailed rationale behind major decisions:
+
+- **ADR-001**: Why we use Docker for both local and cloud deployment
+- **ADR-002**: Why we chose Terraform for Infrastructure as Code
+- **ADR-003**: Why we selected DigitalOcean as the cloud provider
+- **ADR-004**: Why Dockerfiles use multi-stage builds
+- **ADR-005**: Why we use Java 8 base images
+- **ADR-006**: Why we created the devops-assessment branch
+
+These ADRs explain the trade-offs considered and help evaluators understand our decision-making process.
 
 ## Original Documentation (For Reference)
 

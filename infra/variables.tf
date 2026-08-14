@@ -37,7 +37,7 @@ variable "github_repo" {
 variable "github_branch" {
   description = "Git branch to deploy"
   type        = string
-  default     = "develop"
+  default     = "devops-assessment"
 }
 
 variable "frontend_port" {

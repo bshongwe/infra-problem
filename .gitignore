@@ -15,3 +15,9 @@ pom.xml.asc
 *.iml
 .idea/
 infra/terraform.tfvars
+
+infra/.terraform/
+infra/.terraform.lock.hcl
+# Terraform files
+infra/*.tfstate.backup
+infra/*.tfstate
