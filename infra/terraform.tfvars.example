@@ -1,0 +1,7 @@
+# DigitalOcean API token - get yours at https://cloud.digitalocean.com/account/api/tokens
+digitalocean_token = "your_digitalocean_api_token_here"
+
+# Optional: Customize the deployment
+# droplet_size   = "s-2vcpu-4gb"
+# droplet_region = "nyc3"
+# ssh_key_name   = "your-ssh-key-name"

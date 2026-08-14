@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  quotes-test:
+    build:
+      context: ./quotes
+      dockerfile: Dockerfile
+    environment:
+      - APP_PORT=8080
+    command: ["lein", "midje"]
+    networks:
+      - newsfeed-network
+
+  newsfeed-test:
+    build:
+      context: ./newsfeed
+      dockerfile: Dockerfile
+    environment:
+      - APP_PORT=8081
+    command: ["lein", "midje"]
+    networks:
+      - newsfeed-network
+
+  front-end-test:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile
+    environment:
+      - APP_PORT=8000
+      - STATIC_URL=http://static-assets:8001
+      - QUOTE_SERVICE_URL=http://quotes:8080
+      - NEWSFEED_SERVICE_URL=http://newsfeed:8081
+      - NEWSFEED_SERVICE_TOKEN=T1&eWbYXNWG1w1^YGKDPxAWJ@^et^&kX
+    command: ["lein", "midje"]
+    depends_on:
+      - quotes-test
+      - newsfeed-test
+    networks:
+      - newsfeed-network
+
+  static-assets:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile.static
+    networks:
+      - newsfeed-network
+
+networks:
+  newsfeed-network:
+    driver: bridge
