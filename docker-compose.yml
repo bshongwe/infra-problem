@@ -1,10 +1,8 @@
-version: '3.8'
-
 services:
   quotes:
     build:
-      context: ./quotes
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./quotes/Dockerfile
     ports:
       - "8080:8080"
     environment:
@@ -19,10 +17,10 @@ services:
 
   newsfeed:
     build:
-      context: ./newsfeed
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./newsfeed/Dockerfile
     ports:
-      - "8081:8081"
+      - "18081:8081"
     environment:
       - APP_PORT=8081
     networks:
@@ -32,11 +30,12 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+      start_period: 10s
 
   front-end:
     build:
-      context: ./front-end
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./front-end/Dockerfile
     ports:
       - "8000:8000"
     environment:
@@ -54,15 +53,27 @@ services:
         condition: service_healthy
     networks:
       - newsfeed-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   static-assets:
     build:
-      context: ./front-end
-      dockerfile: Dockerfile.static
+      context: .
+      dockerfile: ./front-end/Dockerfile.static
     ports:
       - "8001:8001"
     networks:
       - newsfeed-network
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/')"]
+      interval: 5s
+      timeout: 3s
+      retries: 2
+      start_period: 5s
 
 networks:
   newsfeed-network:

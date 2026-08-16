@@ -3,8 +3,8 @@ version: '3.8'
 services:
   quotes-test:
     build:
-      context: ./quotes
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./quotes/Dockerfile
     environment:
       - APP_PORT=8080
     command: ["lein", "midje"]
@@ -13,8 +13,8 @@ services:
 
   newsfeed-test:
     build:
-      context: ./newsfeed
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./newsfeed/Dockerfile
     environment:
       - APP_PORT=8081
     command: ["lein", "midje"]
@@ -23,8 +23,8 @@ services:
 
   front-end-test:
     build:
-      context: ./front-end
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./front-end/Dockerfile
     environment:
       - APP_PORT=8000
       - STATIC_URL=http://static-assets:8001
@@ -40,8 +40,8 @@ services:
 
   static-assets:
     build:
-      context: ./front-end
-      dockerfile: Dockerfile.static
+      context: .
+      dockerfile: ./front-end/Dockerfile.static
     networks:
       - newsfeed-network
 

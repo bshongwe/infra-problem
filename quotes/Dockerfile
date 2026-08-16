@@ -1,24 +1,27 @@
 # Stage 1: Build the application
-FROM clojure:lein-2.9.1-openjdk-8 AS builder
+FROM clojure:openjdk-8-lein AS builder
+
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Install dependencies first (cache layer)
+# Build shared dependency first so the service can resolve the local SNAPSHOT artifact
 COPY common-utils/project.clj common-utils/
-COPY quotes/project.clj quotes/
-RUN cd quotes && lein install
+COPY common-utils/src common-utils/src
+RUN cd common-utils && lein install
 
-# Copy source code
+# Install service dependencies and build the app
+COPY quotes/project.clj quotes/
+RUN cd quotes && lein deps
+
 COPY quotes/src quotes/src
 COPY quotes/resources quotes/resources
-
-# Build the JAR
 RUN cd quotes && lein uberjar
 
 # Stage 2: Create minimal runtime image
-FROM openjdk:8-jre-alpine
+FROM eclipse-temurin:8-jre-alpine
 
-RUN apk add --no-cache bash wget
+RUN apk add --no-cache bash wget ca-certificates
 
 WORKDIR /app
 
