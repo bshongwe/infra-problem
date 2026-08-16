@@ -39,7 +39,6 @@ See [docs/cloud-deployment.md](docs/cloud-deployment.md) for detailed instructio
 - **[Cloud Deployment Guide](docs/cloud-deployment.md)** - Deploy to the cloud
 - **[Architecture Decision Records (ADRs)](docs/adr/README.md)** - Key technical decisions and rationale
 - **[Security Considerations](SECURITY.md)** - Security notes and best practices
-- **[Original README](README-original.md)** - Original project documentation
 
 ## Key Design Decisions
 
