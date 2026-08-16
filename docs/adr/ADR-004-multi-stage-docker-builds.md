@@ -35,16 +35,29 @@ We will use **multi-stage Docker builds** to compile the Clojure code inside the
 
 ```dockerfile
 # Stage 1: Build
-FROM clojure:lein-2.9.1-openjdk-8 AS builder
+FROM clojure:openjdk-8-lein AS builder
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
-COPY . .
-RUN lein uberjar
+
+# Build shared library dependency first
+COPY common-utils/project.clj common-utils/
+COPY common-utils/src common-utils/src
+RUN cd common-utils && lein install
+
+# Then build the service
+COPY quotes/project.clj quotes/
+RUN cd quotes && lein deps
+COPY quotes/src quotes/src
+COPY quotes/resources quotes/resources
+RUN cd quotes && lein uberjar
 
 # Stage 2: Runtime
-FROM openjdk:8-jre-alpine
+FROM eclipse-temurin:8-jre-alpine
 WORKDIR /app
-COPY --from=builder /app/target/uberjar/*-standalone.jar app.jar
+COPY --from=builder /app/quotes/target/uberjar/*-standalone.jar app.jar
 EXPOSE 8080
+HEALTHCHECK --interval=10s --timeout=5s --retries=3 \
+  CMD wget --spider -q http://localhost:8080/ping || exit 1
 CMD ["java", "-jar", "app.jar"]
 ```
 
@@ -98,11 +111,35 @@ CMD ["java", "-jar", "app.jar"]
 
 ## Implementation Details
 
-- Build stage uses `clojure:lein-2.9.1-openjdk-8` image
-- Runtime stage uses `openjdk:8-jre-alpine` (minimal)
+- Build stage uses `clojure:openjdk-8-lein` image (current, actively maintained)
+- Runtime stage uses `eclipse-temurin:8-jre-alpine` (minimal, maintained by Eclipse Foundation)
+- **Critical**: Each service Dockerfile must build the `common-utils` shared library first before building the service itself
+  - This ensures the common-utils JAR is available in the Maven local repository before service dependencies are resolved
+  - Prevents "Could not find artifact com.thoughtworks:common-utils:jar:0.1.0-SNAPSHOT" errors
 - Docker Compose will rebuild automatically when source changes
 - Build cache speeds up subsequent builds
 - All three services (quotes, newsfeed, front-end) use this pattern
+
+## Common-Utils Dependency Build Order
+
+This is a **critical implementation detail** that must be followed in each service's Dockerfile:
+
+```dockerfile
+# 1. Copy common-utils project metadata
+COPY common-utils/project.clj common-utils/
+COPY common-utils/src common-utils/src
+
+# 2. Build and install common-utils to local Maven repository
+RUN cd common-utils && lein install
+
+# 3. THEN copy and build the service that depends on common-utils
+COPY [SERVICE]/project.clj [SERVICE]/
+RUN cd [SERVICE] && lein deps
+COPY [SERVICE]/src [SERVICE]/src
+RUN cd [SERVICE] && lein uberjar
+```
+
+Failure to follow this order results in dependency resolution failures during the Docker build.
 
 ## Build Time Optimization
 

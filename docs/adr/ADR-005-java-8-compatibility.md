@@ -17,7 +17,7 @@ The current environment has Java 25 installed, which is incompatible with the pr
 
 We will use **Java 8 JRE base images** in our Docker containers:
 
-- **Base image**: `openjdk:8-jre-alpine`
+- **Base image**: `eclipse-temurin:8-jre-alpine` (maintained by Eclipse Foundation, replaces deprecated openjdk:8-jre-alpine)
 - **Alpine Linux**: Minimal footprint (~100MB vs ~500MB for Ubuntu)
 - **JRE (not JDK)**: Only need runtime, not compiler
 - **Explicit version**: Pin to Java 8 to avoid surprises
@@ -84,10 +84,19 @@ We will use **Java 8 JRE base images** in our Docker containers:
 
 ## Implementation Details
 
-- Base image: `openjdk:8-jre-alpine`
+- Base image: `eclipse-temurin:8-jre-alpine` (currently used in production)
+- Previous base image: `openjdk:8-jre-alpine` (deprecated, no longer maintained)
 - Alpine package manager: `apk`
-- Additional packages: bash (for scripting)
+- Additional packages: ca-certificates (for HTTPS), bash (for scripting)
 - Health checks use `wget` (installed via Dockerfile if needed)
+
+## Migration Note
+
+As of 2024, the `openjdk:8-jre-alpine` image is no longer actively maintained. The project now uses `eclipse-temurin:8-jre-alpine`, which:
+- Receives regular security updates
+- Is backed by the Eclipse Foundation (open-source governance)
+- Maintains API compatibility with OpenJDK
+- Is the recommended replacement for deprecated openjdk images
 
 ## Security Considerations
 

@@ -74,11 +74,13 @@ We will use **Docker containers** for both local development and cloud deploymen
 
 ## Implementation Details
 
-- Base image: `openjdk:8-jre-alpine` (minimal Java 8)
+- Builder image: `clojure:openjdk-8-lein` (Clojure with Leiningen)
+- Runtime base image: `eclipse-temurin:8-jre-alpine` (minimal Java 8, actively maintained)
 - Multi-stage builds compile Clojure code inside containers
 - Docker Compose for service orchestration
 - Health checks ensure proper startup order
 - Network bridge connects all services
+- All services share the `common-utils` library, built as dependency in each Dockerfile
 
 ## Related Decisions
 - ADR-004: Multi-stage Docker builds

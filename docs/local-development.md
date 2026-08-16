@@ -39,7 +39,7 @@ Once all services are running, visit **http://localhost:8000** in your web brows
 The application consists of four Docker containers:
 
 1. **quotes** (port 8080) - Serves random quotes
-2. **newsfeed** (port 8081) - Aggregates RSS feeds
+2. **newsfeed** (port 18081 external → 8081 internal) - Aggregates RSS feeds
 3. **front-end** (port 8000) - Main web application
 4. **static-assets** (port 8001) - Serves CSS and static files
 
@@ -48,9 +48,11 @@ The application consists of four Docker containers:
 ```
 front-end (8000)
     ├── quotes (8080)
-    ├── newsfeed (8081)
+    ├── newsfeed (8081 internal)
     └── static-assets (8001)
 ```
+
+**Note**: The newsfeed service uses external port 18081 to avoid conflicts with other services on developer machines. Internally, it still runs on 8081 for inter-service communication.
 
 ## Common Tasks
 
@@ -119,11 +121,11 @@ You should see all services showing as "healthy".
 
 - **Front-end**: http://localhost:8000
 - **Quotes API**: http://localhost:8080/api/quote
-- **Newsfeed API**: http://localhost:8081/api/feeds
+- **Newsfeed API**: http://localhost:18081/api/feeds (external port for local development)
 - **Health checks**: 
   - http://localhost:8000/ping
   - http://localhost:8080/ping
-  - http://localhost:8081/ping
+  - http://localhost:18081/ping (external port for local development)
 
 ## Environment Variables
 
