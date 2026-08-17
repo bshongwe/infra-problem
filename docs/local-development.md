@@ -28,6 +28,10 @@ cd infra-problem
 # Switch to the devops-assessment branch
 git checkout devops-assessment
 
+# Set up environment variables
+cp .env.example .env
+# Edit .env and set NEWSFEED_SERVICE_TOKEN to the real token value
+
 # Start all services
 docker-compose up
 ```
@@ -39,7 +43,7 @@ Once all services are running, visit **http://localhost:8000** in your web brows
 The application consists of four Docker containers:
 
 1. **quotes** (port 8080) - Serves random quotes
-2. **newsfeed** (port 18081 external → 8081 internal) - Aggregates RSS feeds
+2. **newsfeed** (host port 8083 → container port 8081) - Aggregates RSS feeds
 3. **front-end** (port 8000) - Main web application
 4. **static-assets** (port 8001) - Serves CSS and static files
 
@@ -48,11 +52,9 @@ The application consists of four Docker containers:
 ```
 front-end (8000)
     ├── quotes (8080)
-    ├── newsfeed (8081 internal)
+    ├── newsfeed (8081 internal / 8083 on host)
     └── static-assets (8001)
 ```
-
-**Note**: The newsfeed service uses external port 18081 to avoid conflicts with other services on developer machines. Internally, it still runs on 8081 for inter-service communication.
 
 ## Common Tasks
 
@@ -121,11 +123,11 @@ You should see all services showing as "healthy".
 
 - **Front-end**: http://localhost:8000
 - **Quotes API**: http://localhost:8080/api/quote
-- **Newsfeed API**: http://localhost:18081/api/feeds (external port for local development)
-- **Health checks**: 
+- **Newsfeed API**: http://localhost:8083/api/feeds
+- **Health checks**:
   - http://localhost:8000/ping
   - http://localhost:8080/ping
-  - http://localhost:18081/ping (external port for local development)
+  - http://localhost:8083/ping
 
 ## Environment Variables
 

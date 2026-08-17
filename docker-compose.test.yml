@@ -30,7 +30,7 @@ services:
       - STATIC_URL=http://static-assets:8001
       - QUOTE_SERVICE_URL=http://quotes:8080
       - NEWSFEED_SERVICE_URL=http://newsfeed:8081
-      - NEWSFEED_SERVICE_TOKEN=T1&eWbYXNWG1w1^YGKDPxAWJ@^et^&kX
+      - NEWSFEED_SERVICE_TOKEN=${NEWSFEED_SERVICE_TOKEN}
     command: ["lein", "midje"]
     depends_on:
       - quotes-test
