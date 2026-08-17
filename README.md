@@ -14,6 +14,10 @@ This project contains three services:
 # Use the devops-assessment branch for the complete solution
 git checkout devops-assessment
 
+# Set up environment variables
+cp .env.example .env
+# Edit .env and set NEWSFEED_SERVICE_TOKEN
+
 # Start all services with Docker Compose
 docker-compose up
 
@@ -35,9 +39,10 @@ See [docs/cloud-deployment.md](docs/cloud-deployment.md) for detailed instructio
 # Documentation
 
 - **[Solution Overview](docs/README.md)** - Complete overview of the DevOps solution
+- **[Architecture Decision Record](docs/ADR.md)** - Consolidated ADR for the assessment
 - **[Local Development Guide](docs/local-development.md)** - Set up your local environment
 - **[Cloud Deployment Guide](docs/cloud-deployment.md)** - Deploy to the cloud
-- **[Architecture Decision Records (ADRs)](docs/adr/README.md)** - Key technical decisions and rationale
+- **[Architecture Decision Records (ADRs)](docs/adr/README.md)** - Detailed per-decision ADRs
 - **[Security Considerations](SECURITY.md)** - Security notes and best practices
 
 ## Key Design Decisions
