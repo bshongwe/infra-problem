@@ -67,6 +67,5 @@ variable "static_assets_port" {
 variable "newsfeed_token" {
   description = "Authentication token for the newsfeed service"
   type        = string
-  default     = "T1&eWbYXNWG1w1^YGKDPxAWJ@^et^&kX"
   sensitive   = true
 }
