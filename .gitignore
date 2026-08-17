@@ -21,3 +21,6 @@ infra/.terraform.lock.hcl
 # Terraform files
 infra/*.tfstate.backup
 infra/*.tfstate
+
+# Local environment secrets
+.env
